@@ -1,3 +1,5 @@
+//Dir go-command written by Richard Hutchinson
+
 package main
 
 //import the correct functions
