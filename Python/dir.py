@@ -5,6 +5,7 @@ import sys
 #print(help(os))
 
 from pathlib import Path
+from datetime import datetime
 
 
 # list of all arguments that you supply to python when running
@@ -27,8 +28,19 @@ items = os.listdir(directory)
 #Sort them alphabetically
 items.sort()
 
-for item in items:
-    print(item)
+#check once if -l flag was provided
+if "-l" in sys.argv:
+    # Loop through and print detailed info
+    for item in items:
+        full_path = os.path.join(directory, item)
+        stats = os.stat(full_path)
+        file_size = stats.st_size
+        mod_time = datetime.fromtimestamp(stats.st_mtime).strftime("%b %d %H:%M")
+        print(item, file_size, mod_time)
+else:
+    # Loop through and print just names
+    for item in items:
+        print(item)
 
 
 #Arguments: Extra info you give to your program when running it. Meaning sys.argv is giving the program extra information (like a file directory when you run it)
