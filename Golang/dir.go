@@ -1,4 +1,4 @@
-//Dir go-command written by Richard Hutchinson
+// Dir go-command written by Richard Hutchinson
 
 package main
 
