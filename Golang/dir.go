@@ -23,7 +23,12 @@ func main() {
 	}
 
 	//Read everything in the directory
-	items, _ := os.ReadDir(directory)
+	items, err := os.ReadDir(directory)
+	if err != nil {
+		// Do something with the error
+		fmt.Printf("Failed to read directory %q: %s\n", directory, err.Error) // Print a helpful error message to the user
+		os.Exit(1) // Exit the program with an exit code of 1, indicating failure.
+	}
 
 	//Print them so we see what we get
 	for _, item := range items {
