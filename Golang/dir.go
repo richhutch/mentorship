@@ -1,4 +1,4 @@
-//Dir go-command written by Richard Hutchinson
+// Dir go-command written by Richard Hutchinson
 
 package main
 
@@ -7,10 +7,6 @@ import (
 	"fmt"
 	"os"
 )
-
-//func main() {
-//	fmt.Println("Hello Dir Command!")
-//}
 
 func main() {
 	//If user didnt provide directory use documents folder
@@ -22,12 +18,40 @@ func main() {
 		directory = os.Args[1]
 	}
 
-	//Read everything in the directory
-	items, _ := os.ReadDir(directory)
+	// Read everything in the directory
+	items, err := os.ReadDir(directory)
+	if err != nil {
+		// Do something with the error
+		fmt.Printf("Failed to read directory %q: %s\n", directory, err.Error()) // Print a helpful error message
+		os.Exit(1)                                                              //Exit the program with an exit code of 1, indicating failure
+	}
 
-	//Print them so we see what we get
-	for _, item := range items {
-		fmt.Println(item.Name())
+	// Check if -l flag was provided
+	foundFlag := false
+	for _, arg := range os.Args {
+		if arg == "-l" {
+			foundFlag = true
+			break
+		}
+	}
+
+	// Use foundFlag to decide what to print
+	if foundFlag {
+		for _, item := range items {
+			info, err := item.Info()
+			if err != nil {
+				fmt.Printf("Error getting info for %s: %s\n", item.Name(), err.Error())
+				continue
+			}
+
+			size := info.Size()
+			modTime := info.ModTime().Format("Jan 02 15:04")
+			fmt.Println(item.Name(), size, modTime)
+		}
+	} else {
+		for _, item := range items {
+			fmt.Println(item.Name())
+		}
 	}
 }
 
