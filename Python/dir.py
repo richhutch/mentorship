@@ -59,3 +59,4 @@ else:
 #os.path.join() expects strings, not Path objects. So we convert it:
 # age = 25          # This is a number
 # age_str = str(25) # This is text: "25"
+#adding this for differences purposes
