@@ -7,7 +7,8 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
-
+def main():
+    "Main fuction to list directory contents"
 # list of all arguments that you supply to python when running
 print(sys.argv)
 # sys.argv = ["dir.py", "C:\\Users"]
@@ -41,6 +42,9 @@ else:
     # Loop through and print just names
     for item in items:
         print(item)
+
+if __name__ == "__main__":
+    main()
 
 
 #Arguments: Extra info you give to your program when running it. Meaning sys.argv is giving the program extra information (like a file directory when you run it)
