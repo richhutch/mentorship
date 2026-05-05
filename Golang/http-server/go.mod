@@ -1,3 +1,3 @@
-module github.com/r-hutchinson/http-server
+module github.com/richhutch/mentorship/Golang/http-server
 
 go 1.25.0
