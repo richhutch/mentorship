@@ -1,5 +1,6 @@
 package main
 
+// NewInMemoryPlayerStore creates a new, initialized in-memory player store.
 func NewInMemoryPlayerStore() *InMemoryPlayerStore {
 	return &InMemoryPlayerStore{map[string]int{}}
 }
