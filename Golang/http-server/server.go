@@ -23,6 +23,9 @@ func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		p.processWin(w, player)
 	case http.MethodGet:
 		p.showScore(w, player)
+	default:
+		http.Error(w, "invalid HTTP method", http.StatusBadRequest)
+		return // don't forget this!! It's very easy. Lets talk about why next time.
 	}
 }
 
