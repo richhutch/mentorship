@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+	// 1: means to give me everything from index 1 onwards
 	args := os.Args[1:]
 
 	if len(args) == 0 {
@@ -16,9 +17,9 @@ func main() {
 
 	switch command {
 	case "add":
-		fmt.Println("add command")
+		addTask(args)
 	case "list":
-		fmt.Println("list command")
+		listTasks()
 	case "done":
 		fmt.Println("done command")
 	case "delete":
