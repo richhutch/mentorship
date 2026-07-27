@@ -21,9 +21,9 @@ func main() {
 	case "list":
 		listTasks()
 	case "done":
-		fmt.Println("done command")
+		doneTask(args)
 	case "delete":
-		fmt.Println("delete command")
+		deleteTask(args)
 	default:
 		fmt.Println("Unknown command:", command)
 	}
