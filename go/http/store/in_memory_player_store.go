@@ -1,4 +1,4 @@
-package main
+package store
 
 // NewInMemoryPlayerStore creates a new, initialized in-memory player store.
 func NewInMemoryPlayerStore() *InMemoryPlayerStore {
