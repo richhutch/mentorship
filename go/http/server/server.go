@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -42,4 +42,10 @@ func (p *PlayerServer) showScore(w http.ResponseWriter, player string) {
 func (p *PlayerServer) processWin(w http.ResponseWriter, player string) {
 	p.store.RecordWin(player)
 	w.WriteHeader(http.StatusAccepted)
+}
+
+func NewPlayerServer(store PlayerStore) *PlayerServer {
+	return &PlayerServer{
+		store: store,
+	}
 }

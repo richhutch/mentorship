@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -29,7 +29,7 @@ func TestGETPlayers(t *testing.T) {
 		},
 		winCalls: nil,
 	}
-	server := &PlayerServer{&store}
+	server := NewPlayerServer(&store)
 
 	t.Run("returns Pepper's score", func(t *testing.T) {
 		request := newGetScoreRequest("Pepper")
@@ -63,10 +63,10 @@ func TestGETPlayers(t *testing.T) {
 
 func TestStoreWins(t *testing.T) {
 	store := StubPlayerStore{
-		map[string]int{},
-		nil,
+		scores:   map[string]int{},
+		winCalls: nil,
 	}
-	server := &PlayerServer{&store}
+	server := NewPlayerServer(&store)
 
 	t.Run("it records wins on POST", func(t *testing.T) {
 		player := "Pepper"
