@@ -5,12 +5,25 @@ import (
 	"os"
 )
 
-const dataFile = "tasks.json"
+// Storage defines how tasks are loaded and saved, so the
+// task logic doesn't need to know whether tasks live in a
+// file, memory, or a database.
+type Storage interface {
+	LoadTasks() ([]Task, error)
+	SaveTasks(tasks []Task) error
+}
 
-// "LoadTasks = grab what's on disk, empty list if nothing there. Save = write current list to disk. Always load before modifying
+// FileStore implements Storage using a JSON file on disk.
+type FileStore struct {
+	Path string
+}
 
-func LoadTasks() ([]Task, error) {
-	data, err := os.ReadFile(dataFile)
+func NewFileStore(path string) *FileStore {
+	return &FileStore{Path: path}
+}
+
+func (f *FileStore) LoadTasks() ([]Task, error) {
+	data, err := os.ReadFile(f.Path)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return []Task{}, nil
@@ -27,11 +40,11 @@ func LoadTasks() ([]Task, error) {
 	return tasks, nil
 }
 
-func SaveTasks(tasks []Task) error {
+func (f *FileStore) SaveTasks(tasks []Task) error {
 	data, err := json.MarshalIndent(tasks, "", "  ")
 	if err != nil {
 		return err
 	}
 
-	return os.WriteFile(dataFile, data, 0644)
+	return os.WriteFile(f.Path, data, 0644)
 }

@@ -3,17 +3,25 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"time"
 )
 
-func addTask(args []string) {
+const dateLayout = "2006-01-02"
+
+func addTask(args []string, storage Storage) {
 	if len(args) < 3 {
 		fmt.Println("Usage: todo add <title> <deadline>")
 		return
 	}
 	title := args[1]
-	deadline := args[2]
 
-	tasks, err := LoadTasks()
+	deadline, err := time.Parse(dateLayout, args[2])
+	if err != nil {
+		fmt.Println("Invalid deadline format, expected YYYY-MM-DD:", err)
+		return
+	}
+
+	tasks, err := storage.LoadTasks()
 	if err != nil {
 		fmt.Println("Error loading tasks:", err)
 		return
@@ -22,34 +30,35 @@ func addTask(args []string) {
 	task := NewTask(1, title, deadline)
 	tasks = append(tasks, task)
 
-	err = SaveTasks(tasks)
+	err = storage.SaveTasks(tasks)
 	if err != nil {
 		fmt.Println("Error saving task:", err)
 		return
 	}
 
-	fmt.Println("Added task:", task.Title, "| Deadline:", task.Deadline)
+	fmt.Println("Added task:", task.Title, "| Deadline:", task.Deadline.Format(dateLayout))
 }
 
-func listTasks() {
-	tasks, err := LoadTasks()
+func listTasks(storage Storage) error {
+	tasks, err := storage.LoadTasks()
 	if err != nil {
-		fmt.Println("Error loading tasks:", err)
-		return
+		return fmt.Errorf("error loading tasks: %w", err)
 	}
 	if len(tasks) == 0 {
 		fmt.Println("No tasks yet.")
-		return
+		return nil
 	}
 	for _, task := range tasks {
 		status := " "
 		if task.Done {
 			status = "x"
 		}
-		fmt.Printf("[%s] %d: %s (due %s)\n", status, task.ID, task.Title, task.Deadline)
+		fmt.Printf("[%s] %d: %s (due %s)\n", status, task.ID, task.Title, task.Deadline.Format(dateLayout))
 	}
+	return nil
 }
-func doneTask(args []string) {
+
+func doneTask(args []string, storage Storage) {
 	if len(args) < 2 {
 		fmt.Println("Usage: todo done <id>")
 		return
@@ -61,7 +70,7 @@ func doneTask(args []string) {
 		return
 	}
 
-	tasks, err := LoadTasks()
+	tasks, err := storage.LoadTasks()
 	if err != nil {
 		fmt.Println("Error loading tasks:", err)
 		return
@@ -81,7 +90,7 @@ func doneTask(args []string) {
 		return
 	}
 
-	err = SaveTasks(tasks)
+	err = storage.SaveTasks(tasks)
 	if err != nil {
 		fmt.Println("Error saving tasks:", err)
 		return
@@ -90,7 +99,7 @@ func doneTask(args []string) {
 	fmt.Println("Marked task", id, "as done")
 }
 
-func deleteTask(args []string) {
+func deleteTask(args []string, storage Storage) {
 	if len(args) < 2 {
 		fmt.Println("Usage: todo delete <id>")
 		return
@@ -102,7 +111,7 @@ func deleteTask(args []string) {
 		return
 	}
 
-	tasks, err := LoadTasks()
+	tasks, err := storage.LoadTasks()
 	if err != nil {
 		fmt.Println("Error loading tasks:", err)
 		return
@@ -123,7 +132,7 @@ func deleteTask(args []string) {
 		return
 	}
 
-	err = SaveTasks(newTasks)
+	err = storage.SaveTasks(newTasks)
 	if err != nil {
 		fmt.Println("Error saving tasks:", err)
 		return
